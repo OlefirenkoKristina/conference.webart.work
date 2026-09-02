@@ -35,7 +35,6 @@
 	"Users",
 	"Clients",
 	"Forms",
-	"Translates",
 	"Home",
 	"Mode",
 	"Density",
@@ -101,5 +100,10 @@
 	"We couldn't find an event for this link. Double-check the URL with the organizer.",
 	"Not your event",
 	"You're signed in, but you're not the owner of this event.",
-	"We couldn't find an event for this link."
+	"We couldn't find an event for this link.",
+	"Feedback",
+	"Share profile",
+	"Share Conference",
+	"For attendees",
+	"For hosts"
 ]

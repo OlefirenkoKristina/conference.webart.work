@@ -69,12 +69,6 @@ export class FooterComponent {
 			to: '/admin/forms',
 			adminOnly: true,
 		},
-		{
-			label: 'Переклади',
-			icon: 'language',
-			to: '/admin/translates',
-			adminOnly: true,
-		},
 	]);
 
 	readonly links = computed(() => {
