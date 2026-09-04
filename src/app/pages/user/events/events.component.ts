@@ -6,9 +6,8 @@ import { CardModule } from '@wawjs/ngx-prime/card';
 import { TagModule } from '@wawjs/ngx-prime/tag';
 import { TranslateDirective } from '@wawjs/ngx-translate';
 import { generateEventSlug } from '../../../conference/event/event.const';
-import { EventState } from '../../../conference/event/event.interface';
+import { Event, EventState } from '../../../conference/event/event.interface';
 import { EventService } from '../../../conference/event/event.service';
-import { LectureService } from '../../../conference/lecture/lecture.service';
 
 /** `/events` — the authenticated owner's own events, grouped by state. */
 @Component({
@@ -21,7 +20,6 @@ export class EventsComponent {
 	private readonly _router = inject(Router);
 	private readonly _userService = inject(UserService);
 	private readonly _eventService = inject(EventService);
-	private readonly _lectureService = inject(LectureService);
 
 	readonly events = computed(() => {
 		const ownerId = this._userService.user()?._id;
@@ -41,15 +39,15 @@ export class EventsComponent {
 		this._router.navigate(['/event', slug, 'manage']);
 	}
 
-	lectureTitle(lectureId: string | undefined): string | null {
-		if (!lectureId) {
-			return null;
-		}
-		return this._lectureService.byId(lectureId)?.title ?? null;
-	}
-
 	editEvent(slug: string): void {
 		this._router.navigate(['/event', slug, 'mutate']);
+	}
+
+	deleteEvent(event: Event): void {
+		if (!confirm(`Видалити подію "${event.title || 'Untitled event'}"?`)) {
+			return;
+		}
+		this._eventService.remove(event._id);
 	}
 
 	private _byState(state: EventState) {

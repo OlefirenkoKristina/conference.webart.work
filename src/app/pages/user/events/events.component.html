@@ -37,9 +37,6 @@
 										{{ event.date }} {{ event.startTime }}@if (event.endTime) { – {{ event.endTime }} }
 									</div>
 								}
-								@if (lectureTitle(event.lectureId); as lecture) {
-									<div class="text-sm opacity-70"><span translate>Лекція:</span> {{ lecture }}</div>
-								}
 							</div>
 							<div class="flex items-center gap-2">
 								<p-tag [value]="event.state"></p-tag>
@@ -48,6 +45,9 @@
 								</button>
 								<button pButton type="button" [text]="true" (click)="openManage(event.slug)">
 									<span translate>Manage</span>
+								</button>
+								<button pButton type="button" severity="danger" [text]="true" (click)="deleteEvent(event)">
+									<i class="pi pi-trash"></i>
 								</button>
 							</div>
 						</div>

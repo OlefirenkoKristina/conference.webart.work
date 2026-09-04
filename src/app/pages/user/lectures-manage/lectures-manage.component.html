@@ -1,0 +1,24 @@
+<div class="mx-auto flex w-full max-w-[720px] flex-col gap-3 p-3 sm:gap-4 sm:p-4">
+	<div class="flex items-center justify-between gap-3">
+		<h1 class="m-0 text-lg font-semibold sm:text-xl" translate>Керування лекціями</h1>
+		<button pButton type="button" (click)="addLecture()">
+			<i class="pi pi-plus"></i>
+			<span translate>Додати лекцію</span>
+		</button>
+	</div>
+
+	@if (!lectures().length) {
+		<p-card>
+			<span translate>Лекцій поки немає.</span>
+		</p-card>
+	}
+
+	@for (lecture of lectures(); track lecture._id) {
+		<app-lecture-edit-card
+			[lecture]="lecture"
+			[expanded]="isExpanded(lecture)"
+			(toggle)="toggleExpanded(lecture)"
+			(deleted)="deleteLecture(lecture)"
+		/>
+	}
+</div>

@@ -126,6 +126,19 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'lectures-manage',
+				canActivate: [MetaGuard],
+				data: {
+					meta: {
+						title: 'Керування лекціями',
+					},
+				},
+				loadChildren: () =>
+					import('./pages/user/lectures-manage/lectures-manage.routes').then(
+						(m) => m.routes,
+					),
+			},
+			{
 				path: 'for-attendees',
 				canActivate: [MetaGuard],
 				data: {

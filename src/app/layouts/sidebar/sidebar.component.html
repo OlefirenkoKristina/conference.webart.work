@@ -114,6 +114,15 @@
 
 	<app-nav-icon
 		[class.sidebar--minimized-icon]="!showNames()"
+		[name]="showNames() ? translateService.translate('Керування лекціями')() : ''"
+		[ariaLabel]="translateService.translate('Керування лекціями')()"
+		(click)="closeIfOverlay()"
+		routerLink="/lectures-manage"
+		icon="pencil"
+	/>
+
+	<app-nav-icon
+		[class.sidebar--minimized-icon]="!showNames()"
 		[name]="showNames() ? translateService.translate('Share Conference')() : ''"
 		[ariaLabel]="translateService.translate('Share Conference')()"
 		(click)="closeIfOverlay()"
