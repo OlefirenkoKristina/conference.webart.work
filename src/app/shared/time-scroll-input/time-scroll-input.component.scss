@@ -1,0 +1,60 @@
+:host {
+	display: block;
+}
+
+.time-scroll {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--sp-2, 8px);
+	padding: var(--sp-2, 8px) var(--sp-3, 12px);
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius, 6px);
+	background: var(--c-bg-secondary);
+	user-select: none;
+	width: 100%;
+	box-sizing: border-box;
+	justify-content: center;
+}
+
+.time-scroll--disabled {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.time-scroll__segment {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	cursor: ns-resize;
+	touch-action: none;
+}
+
+.time-scroll__value {
+	font-variant-numeric: tabular-nums;
+	font-size: 1.1rem;
+	line-height: 1.2;
+	color: var(--c-text-primary);
+	min-width: 2ch;
+	text-align: center;
+}
+
+.time-scroll__sep {
+	color: var(--c-text-primary);
+	font-size: 1.1rem;
+}
+
+.time-scroll__btn {
+	all: unset;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	color: var(--c-text-muted);
+	font-size: 0.7rem;
+	line-height: 1;
+	padding: 2px;
+}
+
+.time-scroll__btn:hover {
+	color: var(--c-primary);
+}

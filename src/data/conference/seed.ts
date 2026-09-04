@@ -1,5 +1,6 @@
 import { Chapter, ChapterReaction } from '../../app/conference/chapter/chapter.interface';
 import { Event } from '../../app/conference/event/event.interface';
+import { Lecture } from '../../app/conference/lecture/lecture.interface';
 import { Poll, PollAnswer } from '../../app/conference/poll/poll.interface';
 import { Question } from '../../app/conference/question/question.interface';
 import { Quiz, QuizAnswer } from '../../app/conference/quiz/quiz.interface';
@@ -21,6 +22,48 @@ export const SEED_EVENTS: Event[] = [
 			'A deep dive into signals-first Angular apps, from reactive primitives to zoneless change detection.',
 		state: 'live',
 		createdAt: new Date().toISOString(),
+	},
+];
+
+export const SEED_LECTURES: Lecture[] = [
+	{
+		_id: 'lec-ai-in-product-development',
+		title: 'Штучний інтелект у продуктовій розробці',
+		speaker: 'Олена Коваль',
+		topic: 'Штучний інтелект',
+		time: '10:00 — 10:45',
+		description:
+			'Огляд практичних кейсів впровадження AI-інструментів у процес розробки продукту: від ідеї до релізу.',
+		content:
+			'На цій лекції ми розглянемо, як команди інтегрують AI-інструменти на кожному етапі розробки продукту — ' +
+			'від генерації ідей та досліджень до автоматизації тестування та підтримки. Розберемо реальні кейси, ' +
+			'типові помилки та метрики, за якими можна оцінити ефект від впровадження.',
+	},
+	{
+		_id: 'lec-scaling-angular-apps',
+		title: 'Масштабування Angular-застосунків',
+		speaker: 'Андрій Петренко',
+		topic: 'Фронтенд',
+		time: '11:00 — 11:45',
+		description:
+			'Архітектурні підходи та практики, які допомагають утримувати великі Angular-проєкти швидкими та підтримуваними.',
+		content:
+			'Поговоримо про архітектурні рішення для великих Angular-застосунків: lazy loading, standalone-компоненти, ' +
+			'signals, оптимізацію білдів та стратегії поділу коду на модулі. Покажемо, як утримувати продуктивність ' +
+			'команди на високому рівні при зростанні кодової бази.',
+	},
+	{
+		_id: 'lec-resilient-microservices',
+		title: 'Побудова відмовостійких мікросервісів',
+		speaker: 'Марія Іванова',
+		topic: 'Бекенд',
+		time: '12:00 — 12:45',
+		description:
+			'Патерни надійності: circuit breaker, retry, ідемпотентність — і як обрати правильний підхід для вашої системи.',
+		content:
+			'Розглянемо ключові патерни відмовостійкості розподілених систем: circuit breaker, retry з backoff, ' +
+			'ідемпотентність операцій та graceful degradation. Обговоримо, як обрати правильну комбінацію підходів ' +
+			'залежно від навантаження та вимог до системи.',
 	},
 ];
 

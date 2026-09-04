@@ -1,0 +1,23 @@
+<div class="time-scroll" [class.time-scroll--disabled]="disabled">
+	<div class="time-scroll__segment" (wheel)="onHourWheel($event)">
+		<button type="button" class="time-scroll__btn" tabindex="-1" (click)="incrementHour()">
+			<i class="pi pi-chevron-up"></i>
+		</button>
+		<span class="time-scroll__value">{{ hours() !== null ? (hours() | number: '2.0-0') : '--' }}</span>
+		<button type="button" class="time-scroll__btn" tabindex="-1" (click)="decrementHour()">
+			<i class="pi pi-chevron-down"></i>
+		</button>
+	</div>
+
+	<span class="time-scroll__sep">:</span>
+
+	<div class="time-scroll__segment" (wheel)="onMinuteWheel($event)">
+		<button type="button" class="time-scroll__btn" tabindex="-1" (click)="incrementMinute()">
+			<i class="pi pi-chevron-up"></i>
+		</button>
+		<span class="time-scroll__value">{{ minutes() !== null ? (minutes() | number: '2.0-0') : '--' }}</span>
+		<button type="button" class="time-scroll__btn" tabindex="-1" (click)="decrementMinute()">
+			<i class="pi pi-chevron-down"></i>
+		</button>
+	</div>
+</div>

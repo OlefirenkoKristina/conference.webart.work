@@ -8,6 +8,10 @@ export const NEW_EVENT: Event = {
 	speaker: '',
 	description: '',
 	state: 'draft',
+	date: '',
+	startTime: '',
+	endTime: '',
+	lectureId: '',
 };
 
 /** Generates a public slug in the `1234-5678` format. */

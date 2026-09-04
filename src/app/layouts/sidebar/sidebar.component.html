@@ -42,6 +42,10 @@
 		</a>
 	</div>
 
+	@if (showNames()) {
+	<div class="mt-2 px-2 text-xs font-semibold tracking-wide uppercase opacity-60" translate>Спільне</div>
+	}
+
 	<app-nav-icon
 		[class.sidebar--minimized-icon]="!showNames()"
 		[name]="showNames() ? translateService.translate('Share profile')() : ''"
@@ -60,6 +64,21 @@
 		icon="cog"
 	/>
 
+	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
+
+	@if (showNames()) {
+	<div class="px-2 text-xs font-semibold tracking-wide uppercase opacity-60" translate>Для учасників</div>
+	}
+
+	<app-nav-icon
+		[class.sidebar--minimized-icon]="!showNames()"
+		[name]="showNames() ? translateService.translate('Лекції')() : ''"
+		[ariaLabel]="translateService.translate('Лекції')()"
+		(click)="closeIfOverlay()"
+		routerLink="/lectures"
+		icon="microphone"
+	/>
+
 	<app-nav-icon
 		[class.sidebar--minimized-icon]="!showNames()"
 		[name]="showNames() ? translateService.translate('Feedback')() : ''"
@@ -67,6 +86,30 @@
 		(click)="closeIfOverlay()"
 		routerLink="/feedback"
 		icon="comment"
+	/>
+
+	<app-nav-icon
+		[class.sidebar--minimized-icon]="!showNames()"
+		[name]="showNames() ? translateService.translate('For attendees')() : ''"
+		[ariaLabel]="translateService.translate('For attendees')()"
+		(click)="closeIfOverlay()"
+		routerLink="/for-attendees"
+		icon="user-plus"
+	/>
+
+	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
+
+	@if (showNames()) {
+	<div class="px-2 text-xs font-semibold tracking-wide uppercase opacity-60" translate>Для організаторів</div>
+	}
+
+	<app-nav-icon
+		[class.sidebar--minimized-icon]="!showNames()"
+		[name]="showNames() ? translateService.translate('Мої події')() : ''"
+		[ariaLabel]="translateService.translate('Мої події')()"
+		(click)="closeIfOverlay()"
+		routerLink="/events"
+		icon="calendar"
 	/>
 
 	<app-nav-icon
@@ -80,15 +123,6 @@
 
 	<app-nav-icon
 		[class.sidebar--minimized-icon]="!showNames()"
-		[name]="showNames() ? translateService.translate('For attendees')() : ''"
-		[ariaLabel]="translateService.translate('For attendees')()"
-		(click)="closeIfOverlay()"
-		routerLink="/for-attendees"
-		icon="user-plus"
-	/>
-
-	<app-nav-icon
-		[class.sidebar--minimized-icon]="!showNames()"
 		[name]="showNames() ? translateService.translate('For hosts')() : ''"
 		[ariaLabel]="translateService.translate('For hosts')()"
 		(click)="closeIfOverlay()"
@@ -97,35 +131,4 @@
 	/>
 
 	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
-
-	@if (userService.role('admin')) {
-	<app-nav-icon
-		[class.sidebar--minimized-icon]="!showNames()"
-		[name]="showNames() ? translateService.translate('Users')() : ''"
-		[ariaLabel]="translateService.translate('Users')()"
-		(click)="closeIfOverlay()"
-		routerLink="/admin/users"
-		icon="user-edit"
-	/>
-
-	<app-nav-icon
-		[class.sidebar--minimized-icon]="!showNames()"
-		[name]="showNames() ? translateService.translate('Clients')() : ''"
-		[ariaLabel]="translateService.translate('Clients')()"
-		routerLink="/admin/clients"
-		(click)="closeIfOverlay()"
-		icon="users"
-	/>
-
-	<app-nav-icon
-		[class.sidebar--minimized-icon]="!showNames()"
-		[name]="showNames() ? translateService.translate('Forms')() : ''"
-		[ariaLabel]="translateService.translate('Forms')()"
-		(click)="closeIfOverlay()"
-		routerLink="/admin/forms"
-		icon="table"
-	/>
-
-	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
-	}
 </aside>

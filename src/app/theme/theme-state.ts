@@ -38,7 +38,7 @@ interface PersistedTheme {
 export class ThemeState {
 	private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-	readonly mode = signal<ThemeMode>('light');
+	readonly mode = signal<ThemeMode>('dark');
 	readonly density = signal<ThemeDensity>('comfortable');
 	readonly radius = signal<ThemeRadius>('rounded');
 
@@ -93,7 +93,7 @@ export class ThemeState {
 			stored = null;
 		}
 
-		const mode = stored?.mode ?? (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+		const mode = stored?.mode ?? 'dark';
 		const density = stored?.density ?? 'comfortable';
 		const radius = stored?.radius ?? 'rounded';
 

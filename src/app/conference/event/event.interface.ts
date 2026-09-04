@@ -11,4 +11,12 @@ export interface Event extends StoredEntity {
 	description: string;
 	state: EventState;
 	createdAt?: string;
+	/** Day the lecture takes place, `YYYY-MM-DD`. */
+	date?: string;
+	/** Lecture start time, `HH:mm`. */
+	startTime?: string;
+	/** Lecture end time, `HH:mm`. */
+	endTime?: string;
+	/** Scheduled lecture (`Lecture._id`), if this event is built around one. */
+	lectureId?: string;
 }

@@ -113,6 +113,19 @@ export const routes: Routes = [
 					),
 			},
 			{
+				path: 'lectures',
+				canActivate: [MetaGuard],
+				data: {
+					meta: {
+						title: 'Лекції',
+					},
+				},
+				loadChildren: () =>
+					import('./pages/user/lectures/lectures.routes').then(
+						(m) => m.routes,
+					),
+			},
+			{
 				path: 'for-attendees',
 				canActivate: [MetaGuard],
 				data: {
@@ -178,52 +191,7 @@ export const routes: Routes = [
 			import('./layouts/user/user.component').then(
 				(m) => m.UserComponent,
 			),
-		children: [
-			{
-				path: 'users',
-				canActivate: [MetaGuard],
-				data: {
-					meta: {
-						title: 'Користувачі',
-					},
-				},
-				loadChildren: () =>
-					import('@wawjs/ngx-bos').then((m) => m.usersRoutes),
-			},
-			{
-				path: 'clients',
-				canActivate: [MetaGuard],
-				data: {
-					meta: {
-						title: 'Клієнти',
-					},
-				},
-				loadChildren: () =>
-					import('@wawjs/ngx-bos').then((m) => m.clientsRoutes),
-			},
-			{
-				path: 'forms',
-				canActivate: [MetaGuard],
-				data: {
-					meta: {
-						title: 'Форми',
-					},
-				},
-				loadChildren: () =>
-					import('@wawjs/ngx-bos').then((m) => m.formsRoutes),
-			},
-			{
-				path: 'form/:formId',
-				canActivate: [MetaGuard],
-				data: {
-					meta: {
-						title: 'Форми',
-					},
-				},
-				loadChildren: () =>
-					import('@wawjs/ngx-bos').then((m) => m.formRoutes),
-			},
-		],
+		children: [],
 	},
 	{
 		path: 'event/:slug',

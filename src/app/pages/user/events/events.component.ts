@@ -8,6 +8,7 @@ import { TranslateDirective } from '@wawjs/ngx-translate';
 import { generateEventSlug } from '../../../conference/event/event.const';
 import { EventState } from '../../../conference/event/event.interface';
 import { EventService } from '../../../conference/event/event.service';
+import { LectureService } from '../../../conference/lecture/lecture.service';
 
 /** `/events` — the authenticated owner's own events, grouped by state. */
 @Component({
@@ -20,6 +21,7 @@ export class EventsComponent {
 	private readonly _router = inject(Router);
 	private readonly _userService = inject(UserService);
 	private readonly _eventService = inject(EventService);
+	private readonly _lectureService = inject(LectureService);
 
 	readonly events = computed(() => {
 		const ownerId = this._userService.user()?._id;
@@ -37,6 +39,13 @@ export class EventsComponent {
 
 	openManage(slug: string): void {
 		this._router.navigate(['/event', slug, 'manage']);
+	}
+
+	lectureTitle(lectureId: string | undefined): string | null {
+		if (!lectureId) {
+			return null;
+		}
+		return this._lectureService.byId(lectureId)?.title ?? null;
 	}
 
 	editEvent(slug: string): void {

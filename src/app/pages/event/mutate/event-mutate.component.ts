@@ -1,133 +1,114 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '@wawjs/ngx-bos';
 import { ButtonModule } from '@wawjs/ngx-prime/button';
 import { CardModule } from '@wawjs/ngx-prime/card';
 import { InputTextModule } from '@wawjs/ngx-prime/inputtext';
-import { TextareaModule } from '@wawjs/ngx-prime/textarea';
+import { SelectModule } from '@wawjs/ngx-prime/select';
 import { TranslateDirective } from '@wawjs/ngx-translate';
-import { NEW_CHAPTER } from '../../../conference/chapter/chapter.const';
-import { ChapterService } from '../../../conference/chapter/chapter.service';
 import { NEW_EVENT } from '../../../conference/event/event.const';
 import { EventService } from '../../../conference/event/event.service';
-import { NEW_POLL } from '../../../conference/poll/poll.const';
-import { PollService } from '../../../conference/poll/poll.service';
-import { NEW_QUIZ } from '../../../conference/quiz/quiz.const';
-import { QuizService } from '../../../conference/quiz/quiz.service';
+import { NEW_LECTURE } from '../../../conference/lecture/lecture.const';
+import { LectureService } from '../../../conference/lecture/lecture.service';
+import { TimeScrollInputComponent } from '../../../shared/time-scroll-input/time-scroll-input.component';
 
 /**
  * `/event/:slug/mutate` — create-or-edit form. Reached from `/events`'s
  * "Create event" action (a fresh, not-yet-persisted slug) or from an edit
- * entry point on an existing event. Structured in clearly separated
- * sections (basic info / chapters / initial polls-quizzes) so it can grow
- * into a fuller event-preparation screen without a rewrite.
+ * entry point on an existing event. Title/speaker/description are derived
+ * from the scheduled lecture, so the form only asks for schedule + lecture.
  */
 @Component({
 	selector: 'app-event-mutate',
-	imports: [ButtonModule, CardModule, InputTextModule, TextareaModule, FormsModule, TranslateDirective],
+	imports: [
+		ButtonModule,
+		CardModule,
+		InputTextModule,
+		SelectModule,
+		TimeScrollInputComponent,
+		FormsModule,
+		TranslateDirective,
+	],
 	templateUrl: './event-mutate.component.html',
 	styleUrl: './event-mutate.component.scss',
 })
-export class EventMutateComponent {
+export class EventMutateComponent implements OnInit {
 	private readonly _router = inject(Router);
 	private readonly _userService = inject(UserService);
 	private readonly _eventService = inject(EventService);
-	private readonly _chapterService = inject(ChapterService);
-	private readonly _pollService = inject(PollService);
-	private readonly _quizService = inject(QuizService);
+	private readonly _lectureService = inject(LectureService);
 
 	readonly slug = input.required<string>();
 
 	readonly existingEvent = computed(() => this._eventService.bySlug(this.slug()) ?? null);
 	readonly isNew = computed(() => !this.existingEvent());
 
-	readonly title = signal('');
-	readonly speaker = signal('');
-	readonly description = signal('');
+	readonly date = signal('');
+	readonly startTime = signal('');
+	readonly endTime = signal('');
 
-	readonly chapterTitles = signal<string[]>(['']);
-	readonly initialPollQuestion = signal('');
-	readonly initialPollOptions = signal('');
-	readonly initialQuizQuestion = signal('');
-	readonly initialQuizOptions = signal('');
-	readonly initialQuizCorrectIndex = signal(0);
+	readonly lectures = this._lectureService.items;
+	readonly lectureId = signal('');
+	readonly isAddingLecture = signal(false);
+	readonly newLectureTitle = signal('');
 
-	constructor() {
+	ngOnInit(): void {
 		const existing = this.existingEvent();
 		if (existing) {
-			this.title.set(existing.title);
-			this.speaker.set(existing.speaker);
-			this.description.set(existing.description);
+			this.date.set(existing.date ?? '');
+			this.startTime.set(existing.startTime ?? '');
+			this.endTime.set(existing.endTime ?? '');
+			this.lectureId.set(existing.lectureId ?? '');
 		}
 	}
 
-	addChapterField(): void {
-		this.chapterTitles.update((titles) => [...titles, '']);
+	toggleAddLecture(): void {
+		this.isAddingLecture.update((value) => !value);
 	}
 
-	setChapterTitle(index: number, value: string): void {
-		this.chapterTitles.update((titles) => titles.map((title, i) => (i === index ? value : title)));
-	}
+	createLecture(): void {
+		const title = this.newLectureTitle().trim();
+		if (!title) {
+			return;
+		}
 
-	removeChapterField(index: number): void {
-		this.chapterTitles.update((titles) => titles.filter((_title, i) => i !== index));
+		const lecture = this._lectureService.create({ ...NEW_LECTURE, title });
+		this.lectureId.set(lecture._id);
+		this.newLectureTitle.set('');
+		this.isAddingLecture.set(false);
 	}
 
 	save(): void {
-		const ownerId = this._userService.user()?._id ?? '';
+		const owner = this._userService.user();
 		const existing = this.existingEvent();
+		const lecture = this._lectureService.byId(this.lectureId());
+		const speaker = owner?.name || lecture?.speaker || '';
 
 		const eventDoc = existing
 			? this._eventService.update(existing._id, {
-					title: this.title().trim(),
-					speaker: this.speaker().trim(),
-					description: this.description().trim(),
+					title: lecture?.title ?? '',
+					speaker,
+					description: lecture?.description ?? '',
+					date: this.date(),
+					startTime: this.startTime(),
+					endTime: this.endTime(),
+					lectureId: this.lectureId(),
 				})!
 			: this._eventService.create({
 					...NEW_EVENT,
 					slug: this.slug(),
-					owner: ownerId,
-					title: this.title().trim(),
-					speaker: this.speaker().trim(),
-					description: this.description().trim(),
+					owner: owner?._id ?? '',
+					title: lecture?.title ?? '',
+					speaker,
+					description: lecture?.description ?? '',
+					date: this.date(),
+					startTime: this.startTime(),
+					endTime: this.endTime(),
+					lectureId: this.lectureId(),
 					createdAt: new Date().toISOString(),
 				});
 
-		if (this.isNew()) {
-			this.chapterTitles()
-				.map((title) => title.trim())
-				.filter((title) => title.length > 0)
-				.forEach((title, order) => {
-					this._chapterService.create({ ...NEW_CHAPTER, eventId: eventDoc._id, title, order });
-				});
-
-			const pollQuestion = this.initialPollQuestion().trim();
-			const pollOptions = this._splitOptions(this.initialPollOptions());
-			if (pollQuestion && pollOptions.length >= 2) {
-				this._pollService.create({ ...NEW_POLL, eventId: eventDoc._id, question: pollQuestion, options: pollOptions });
-			}
-
-			const quizQuestion = this.initialQuizQuestion().trim();
-			const quizOptions = this._splitOptions(this.initialQuizOptions());
-			if (quizQuestion && quizOptions.length >= 2) {
-				this._quizService.create({
-					...NEW_QUIZ,
-					eventId: eventDoc._id,
-					question: quizQuestion,
-					options: quizOptions,
-					correctOptionIndex: this.initialQuizCorrectIndex(),
-				});
-			}
-		}
-
 		this._router.navigate(['/event', eventDoc.slug, 'manage']);
-	}
-
-	private _splitOptions(raw: string): string[] {
-		return raw
-			.split(',')
-			.map((option) => option.trim())
-			.filter((option) => option.length > 0);
 	}
 }

@@ -4,61 +4,63 @@
 	</h1>
 
 	<p-card>
-		<div class="text-sm font-semibold" translate>Basic information</div>
-		<div class="mt-2 flex flex-col gap-2">
-			<input pInputText [(ngModel)]="title" [placeholder]="'Event title'" />
-			<input pInputText [(ngModel)]="speaker" [placeholder]="'Speaker'" />
-			<textarea pTextarea [(ngModel)]="description" [placeholder]="'Description'" rows="3"></textarea>
+		<div class="text-sm font-semibold" translate>Дата та час лекції</div>
+		<div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
+			<div class="flex flex-1 flex-col gap-1">
+				<small class="opacity-70" translate>Дата</small>
+				<div class="flex flex-1">
+					<input pInputText type="date" lang="uk-UA" class="h-full w-full" [(ngModel)]="date" />
+				</div>
+			</div>
+			<div class="flex flex-col gap-1">
+				<small class="opacity-70" translate>Початок</small>
+				<app-time-scroll-input [(ngModel)]="startTime" class="w-full" />
+			</div>
+			<div class="flex flex-col gap-1">
+				<small class="opacity-70" translate>Кінець</small>
+				<app-time-scroll-input [(ngModel)]="endTime" class="w-full" />
+			</div>
 		</div>
 	</p-card>
 
-	@if (isNew()) {
-		<p-card>
-			<div class="text-sm font-semibold" translate>Chapters</div>
-			<div class="mt-2 flex flex-col gap-2">
-				@for (title of chapterTitles(); track $index) {
+	<p-card>
+		<div class="text-sm font-semibold" translate>Лекція</div>
+		<div class="mt-2 flex flex-col gap-2">
+			<p-select
+				[options]="lectures()"
+				optionLabel="title"
+				optionValue="_id"
+				[(ngModel)]="lectureId"
+				[placeholder]="'Оберіть лекцію'"
+				[showClear]="true"
+				class="w-full"
+			></p-select>
+
+			@if (!isAddingLecture()) {
+				<button pButton type="button" [text]="true" class="self-start" (click)="toggleAddLecture()">
+					<i class="pi pi-plus"></i>
+					<span translate>Додати нову лекцію</span>
+				</button>
+			} @else {
+				<div class="flex flex-col gap-2 sm:flex-row">
+					<input
+						pInputText
+						class="w-full"
+						[(ngModel)]="newLectureTitle"
+						[placeholder]="'Назва лекції'"
+					/>
 					<div class="flex gap-2">
-						<input
-							pInputText
-							class="w-full"
-							[ngModel]="title"
-							(ngModelChange)="setChapterTitle($index, $event)"
-							[placeholder]="'Chapter title'"
-						/>
-						<button pButton type="button" severity="danger" [text]="true" (click)="removeChapterField($index)">
-							<i class="pi pi-trash"></i>
+						<button pButton type="button" (click)="createLecture()">
+							<span translate>Додати</span>
+						</button>
+						<button pButton type="button" [text]="true" (click)="toggleAddLecture()">
+							<span translate>Скасувати</span>
 						</button>
 					</div>
-				}
-				<button pButton type="button" [text]="true" (click)="addChapterField()">
-					<i class="pi pi-plus"></i>
-					<span translate>Add chapter</span>
-				</button>
-			</div>
-		</p-card>
-
-		<p-card>
-			<div class="text-sm font-semibold" translate>Initial poll (optional)</div>
-			<div class="mt-2 flex flex-col gap-2">
-				<input pInputText [(ngModel)]="initialPollQuestion" [placeholder]="'Poll question'" />
-				<input pInputText [(ngModel)]="initialPollOptions" [placeholder]="'Options, comma separated'" />
-			</div>
-		</p-card>
-
-		<p-card>
-			<div class="text-sm font-semibold" translate>Initial quiz (optional)</div>
-			<div class="mt-2 flex flex-col gap-2">
-				<input pInputText [(ngModel)]="initialQuizQuestion" [placeholder]="'Quiz question'" />
-				<input pInputText [(ngModel)]="initialQuizOptions" [placeholder]="'Options, comma separated'" />
-				<input
-					pInputText
-					type="number"
-					[(ngModel)]="initialQuizCorrectIndex"
-					[placeholder]="'Correct option index (0-based)'"
-				/>
-			</div>
-		</p-card>
-	}
+				</div>
+			}
+		</div>
+	</p-card>
 
 	<button pButton type="button" (click)="save()">
 		<span translate>{{ isNew() ? 'Create' : 'Save changes' }}</span>

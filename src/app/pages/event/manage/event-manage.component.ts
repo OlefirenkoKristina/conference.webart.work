@@ -1,20 +1,16 @@
-import { DecimalPipe } from '@angular/common';
-import { Component, computed, inject, input, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '@wawjs/ngx-bos';
 import { ButtonModule } from '@wawjs/ngx-prime/button';
 import { CardModule } from '@wawjs/ngx-prime/card';
 import { InputTextModule } from '@wawjs/ngx-prime/inputtext';
 import { SelectButtonModule } from '@wawjs/ngx-prime/selectbutton';
-import { TagModule } from '@wawjs/ngx-prime/tag';
 import { TextareaModule } from '@wawjs/ngx-prime/textarea';
 import { TranslateDirective } from '@wawjs/ngx-translate';
 import { environment } from '@env';
 import { MessageService } from '@wawjs/ngx-prime/api';
-import { Chapter } from '../../../conference/chapter/chapter.interface';
 import { ChapterService, ChapterReactionService } from '../../../conference/chapter/chapter.service';
-import { NEW_CHAPTER } from '../../../conference/chapter/chapter.const';
 import { EventState } from '../../../conference/event/event.interface';
 import { EventService } from '../../../conference/event/event.service';
 import { Poll } from '../../../conference/poll/poll.interface';
@@ -39,10 +35,9 @@ import { NEW_QUIZ } from '../../../conference/quiz/quiz.const';
 	imports: [
 		ButtonModule,
 		CardModule,
-		DecimalPipe,
 		InputTextModule,
+		RouterLink,
 		SelectButtonModule,
-		TagModule,
 		TextareaModule,
 		FormsModule,
 		TranslateDirective,
@@ -50,7 +45,7 @@ import { NEW_QUIZ } from '../../../conference/quiz/quiz.const';
 	templateUrl: './event-manage.component.html',
 	styleUrl: './event-manage.component.scss',
 })
-export class EventManageComponent {
+export class EventManageComponent implements OnInit {
 	private readonly _router = inject(Router);
 	private readonly _messageService = inject(MessageService);
 	private readonly _userService = inject(UserService);
@@ -122,18 +117,19 @@ export class EventManageComponent {
 	];
 
 	readonly eventTitleDraft = signal('');
+	readonly eventSpeakerDraft = signal('');
 	readonly eventDescriptionDraft = signal('');
 
-	readonly newChapterTitle = signal('');
 	readonly newPollQuestion = signal('');
 	readonly newPollOptions = signal('');
 	readonly newQuizQuestion = signal('');
 	readonly newQuizOptions = signal('');
 	readonly newQuizCorrectIndex = signal(0);
 
-	constructor() {
+	ngOnInit(): void {
 		const eventDoc = this.event();
 		this.eventTitleDraft.set(eventDoc?.title ?? '');
+		this.eventSpeakerDraft.set(eventDoc?.speaker || this._userService.user()?.name || '');
 		this.eventDescriptionDraft.set(eventDoc?.description ?? '');
 
 		queueMicrotask(() => {
@@ -145,7 +141,7 @@ export class EventManageComponent {
 
 	copyJoinLink(): void {
 		navigator.clipboard?.writeText(this.joinUrl()).then(() => {
-			this._messageService.add({ severity: 'success', detail: 'Join link copied' });
+			this._messageService.add({ severity: 'success', detail: 'Посилання скопійовано' });
 		});
 	}
 
@@ -157,6 +153,7 @@ export class EventManageComponent {
 
 		this._eventService.update(eventDoc._id, {
 			title: this.eventTitleDraft().trim(),
+			speaker: this.eventSpeakerDraft().trim(),
 			description: this.eventDescriptionDraft().trim(),
 		});
 	}
@@ -170,44 +167,18 @@ export class EventManageComponent {
 		this._eventService.update(eventDoc._id, { state });
 	}
 
-	createChapter(): void {
-		const title = this.newChapterTitle().trim();
-		const eventDoc = this.event();
-		if (!title || !eventDoc) {
-			return;
+	/**
+	 * Saves the current draft info and returns to "My events". Only flips a
+	 * still-`draft` event to `live` — an already `live`/`ended` state was set
+	 * explicitly via the state switch above and must not be overridden.
+	 */
+	startSession(): void {
+		this.saveEventInfo();
+		if (this.event()?.state === 'draft') {
+			this.setEventState('live');
 		}
-
-		this._chapterService.create({
-			...NEW_CHAPTER,
-			eventId: eventDoc._id,
-			title,
-			order: this.chapters().length,
-		});
-		this.newChapterTitle.set('');
-	}
-
-	activateChapter(chapter: Chapter): void {
-		this._chapterService.activate(chapter);
-	}
-
-	moveChapter(chapter: Chapter, direction: -1 | 1): void {
-		const ordered = this.chapters();
-		const index = ordered.findIndex((item) => item._id === chapter._id);
-		const swapWith = ordered[index + direction];
-		if (index < 0 || !swapWith) {
-			return;
-		}
-
-		this._chapterService.update(chapter._id, { order: swapWith.order });
-		this._chapterService.update(swapWith._id, { order: chapter.order });
-	}
-
-	deleteChapter(chapter: Chapter): void {
-		this._chapterService.remove(chapter._id);
-	}
-
-	chapterReactionSummary(chapter: Chapter) {
-		return this._chapterReactionService.summary(chapter._id);
+		this._messageService.add({ severity: 'success', detail: 'Збережено' });
+		this._router.navigateByUrl('/events');
 	}
 
 	deleteQuestion(question: Question): void {

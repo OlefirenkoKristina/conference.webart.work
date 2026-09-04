@@ -51,24 +51,6 @@ export class FooterComponent {
 	private readonly allLinks = computed<FooterLink[]>(() => [
 		{ label: 'Головна', icon: 'home', to: '/' },
 		{ label: 'Профіль', icon: 'user', to: '/profile' },
-		{
-			label: 'Користувачі',
-			icon: 'user-edit',
-			to: '/admin/users',
-			adminOnly: true,
-		},
-		{
-			label: 'Клієнти',
-			icon: 'users',
-			to: '/admin/clients',
-			adminOnly: true,
-		},
-		{
-			label: 'Форми',
-			icon: 'table',
-			to: '/admin/forms',
-			adminOnly: true,
-		},
 	]);
 
 	readonly links = computed(() => {

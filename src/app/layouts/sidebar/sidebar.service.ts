@@ -49,7 +49,7 @@ export class SidebarService {
 	readonly widthPx = computed(() => {
 		// minimized is a thin rail; tune if needed
 		if (!this.isMobile() && this.webMode() === 'minimized') return 72;
-		return 200;
+		return 232;
 	});
 
 	constructor() {
