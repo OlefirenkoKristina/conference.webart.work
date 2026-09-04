@@ -21,6 +21,9 @@ export class LecturesManageComponent {
 	readonly lectures = this._lectureService.items;
 	readonly expandedId = signal<string | null>(null);
 
+	/** A not-yet-persisted lecture being composed; only added to the store on save. */
+	readonly draftLecture = signal<Lecture | null>(null);
+
 	isExpanded(lecture: Lecture): boolean {
 		return this.expandedId() === lecture._id;
 	}
@@ -30,8 +33,15 @@ export class LecturesManageComponent {
 	}
 
 	addLecture(): void {
-		const lecture = this._lectureService.create({ ...NEW_LECTURE, title: 'Нова лекція' });
-		this.expandedId.set(lecture._id);
+		this.draftLecture.set({ ...NEW_LECTURE });
+	}
+
+	cancelDraft(): void {
+		this.draftLecture.set(null);
+	}
+
+	onDraftCreated(): void {
+		this.draftLecture.set(null);
 	}
 
 	deleteLecture(lecture: Lecture): void {

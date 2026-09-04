@@ -10,7 +10,6 @@ import { TextareaModule } from '@wawjs/ngx-prime/textarea';
 import { TranslateDirective } from '@wawjs/ngx-translate';
 import { environment } from '@env';
 import { MessageService } from '@wawjs/ngx-prime/api';
-import { ChapterService, ChapterReactionService } from '../../../conference/chapter/chapter.service';
 import { EventState } from '../../../conference/event/event.interface';
 import { EventService } from '../../../conference/event/event.service';
 import { Poll } from '../../../conference/poll/poll.interface';
@@ -50,8 +49,6 @@ export class EventManageComponent implements OnInit {
 	private readonly _messageService = inject(MessageService);
 	private readonly _userService = inject(UserService);
 	private readonly _eventService = inject(EventService);
-	private readonly _chapterService = inject(ChapterService);
-	private readonly _chapterReactionService = inject(ChapterReactionService);
 	private readonly _questionService = inject(QuestionService);
 	private readonly _pollService = inject(PollService);
 	private readonly _pollAnswerService = inject(PollAnswerService);
@@ -71,13 +68,13 @@ export class EventManageComponent implements OnInit {
 
 	readonly joinUrl = computed(() => `${environment.url}/event/${this.slug()}`);
 
-	readonly chapters = computed(() => {
-		const eventDoc = this.event();
-		return eventDoc ? this._chapterService.byEvent(eventDoc._id) : [];
-	});
+	/** Questions live on the scheduled lecture's chat, not the event itself. */
 	readonly questions = computed(() => {
 		const eventDoc = this.event();
-		return eventDoc ? this._questionService.byEvent(eventDoc._id) : [];
+		if (!eventDoc) {
+			return [];
+		}
+		return this._questionService.byEvent(eventDoc.lectureId || eventDoc._id);
 	});
 	readonly polls = computed(() => {
 		const eventDoc = this.event();
@@ -90,15 +87,9 @@ export class EventManageComponent implements OnInit {
 
 	/** Live audience-participation counters for the dashboard summary. */
 	readonly stats = computed(() => {
-		const chapterIds = new Set(this.chapters().map((chapter) => chapter._id));
-		const reactionCount = this._chapterReactionService
-			.all()
-			.filter((reaction) => chapterIds.has(reaction.chapterId)).length;
-
 		return {
 			questionCount: this.questions().length,
 			totalLikes: this.questions().reduce((sum, question) => sum + question.likes, 0),
-			reactionCount,
 			pollAnswerCount: this.polls().reduce(
 				(sum, poll) => sum + this._pollAnswerService.all().filter((a) => a.pollId === poll._id).length,
 				0,

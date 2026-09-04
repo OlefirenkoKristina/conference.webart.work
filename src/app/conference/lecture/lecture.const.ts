@@ -8,4 +8,6 @@ export const NEW_LECTURE: Lecture = {
 	time: '',
 	description: '',
 	content: '',
+	fileName: '',
+	fileDataUrl: '',
 };

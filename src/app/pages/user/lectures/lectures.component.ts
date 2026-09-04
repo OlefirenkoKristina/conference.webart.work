@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ButtonModule } from '@wawjs/ngx-prime/button';
 import { CardModule } from '@wawjs/ngx-prime/card';
-import { TagModule } from '@wawjs/ngx-prime/tag';
 import { TranslateDirective } from '@wawjs/ngx-translate';
 import { LectureService } from '../../../conference/lecture/lecture.service';
 
@@ -10,7 +8,7 @@ import { LectureService } from '../../../conference/lecture/lecture.service';
 @Component({
 	selector: 'app-lectures',
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [ButtonModule, CardModule, TagModule, TranslateDirective, RouterLink],
+	imports: [CardModule, TranslateDirective, RouterLink],
 	templateUrl: './lectures.component.html',
 	styleUrl: './lectures.component.scss',
 })

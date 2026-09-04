@@ -5,15 +5,25 @@
 			class="min-w-0 flex-1 cursor-pointer border-0 bg-transparent p-0 text-left"
 			(click)="toggle.emit()"
 		>
-			<div class="truncate font-semibold">{{ lecture().title || 'Без назви' }}</div>
-			<small class="opacity-70">{{ lecture().speaker }}@if (lecture().time) { · {{ lecture().time }} }</small>
+			<div class="flex items-center gap-2">
+				<span class="truncate font-semibold">{{ lecture().title || 'Без назви' }}</span>
+				@if (lecture().fileName) {
+					<i class="pi pi-paperclip text-sm opacity-70"></i>
+				}
+			</div>
 		</button>
 		<div class="flex items-center gap-1">
-			<button pButton type="button" [text]="true" (click)="toggle.emit()">
-				<i class="pi" [ngClass]="expanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-			</button>
+			@if (!isNew()) {
+				<button pButton type="button" [text]="true" (click)="toggle.emit()">
+					<i class="pi" [ngClass]="expanded() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+				</button>
+			}
 			<button pButton type="button" severity="danger" [text]="true" (click)="remove()">
-				<i class="pi pi-trash"></i>
+				@if (isNew()) {
+					<span translate>Скасувати</span>
+				} @else {
+					<i class="pi pi-trash"></i>
+				}
 			</button>
 		</div>
 	</div>
@@ -21,14 +31,35 @@
 	@if (expanded()) {
 		<div class="mt-3 flex flex-col gap-2">
 			<input pInputText [(ngModel)]="title" [placeholder]="'Назва лекції'" />
-			<input pInputText [(ngModel)]="speaker" [placeholder]="'Спікер'" />
-			<input pInputText [(ngModel)]="topic" [placeholder]="'Тема (тег)'" />
-			<input pInputText [(ngModel)]="time" [placeholder]="'Час, напр. 10:00 — 10:45'" />
-			<textarea pTextarea [(ngModel)]="description" [placeholder]="'Короткий опис'" rows="2"></textarea>
-			<textarea pTextarea [(ngModel)]="content" [placeholder]="'Повний текст лекції'" rows="4"></textarea>
+
+			<div class="flex flex-col gap-1">
+				<small class="opacity-70" translate>Файл лекції (презентація, PDF тощо)</small>
+
+				@if (fileName()) {
+					<div class="flex items-center justify-between gap-2 rounded-card border border-[var(--c-border)] p-2 text-sm">
+						<a [href]="fileDataUrl()" [download]="fileName()" class="truncate">
+							<i class="pi pi-file"></i>
+							{{ fileName() }}
+						</a>
+						<button pButton type="button" severity="danger" [text]="true" (click)="removeFile()">
+							<i class="pi pi-trash"></i>
+						</button>
+					</div>
+				} @else {
+					<input type="file" (change)="onFileSelected($event)" />
+				}
+
+				@if (fileError()) {
+					<small class="text-[var(--c-secondary)]">{{ fileError() }}</small>
+				}
+			</div>
 
 			<button pButton type="button" [disabled]="!hasChanges()" (click)="save()">
-				<span translate>Зберегти</span>
+				@if (isNew()) {
+					<span translate>Додати лекцію</span>
+				} @else {
+					<span translate>Зберегти</span>
+				}
 			</button>
 		</div>
 	}

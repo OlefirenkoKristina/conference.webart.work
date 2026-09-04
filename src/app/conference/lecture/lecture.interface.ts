@@ -8,4 +8,8 @@ export interface Lecture extends StoredEntity {
 	time: string;
 	description: string;
 	content: string;
+	/** Original name of the attached material (slides, PDF, etc.), if any. */
+	fileName?: string;
+	/** The attached file, inlined as a data URL (no backend to upload to). */
+	fileDataUrl?: string;
 }
