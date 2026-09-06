@@ -10,6 +10,9 @@ import { TranslateDirective, TranslateService } from '@wawjs/ngx-translate';
 import { NavIconComponent } from '../../shared/nav-icon/nav-icon.component';
 import { SidebarService } from './sidebar.service';
 
+/** Only this account sees the organizer tools — everyone else gets the plain attendee sidebar. */
+const CEO_EMAIL = 'ceo@webart.work';
+
 @Component({
 	selector: 'layout-sidebar',
 	templateUrl: './sidebar.component.html',
@@ -26,6 +29,10 @@ export class SidebarComponent {
 
 	readonly isPreview = this.sidebarService.previewVisible;
 	readonly isMobile = this.sidebarService.isMobile;
+
+	readonly isOrganizer = computed(
+		() => (this.userService.user()?.email || '').trim().toLowerCase() === CEO_EMAIL,
+	);
 
 	readonly isOverlay = computed(() => this.isMobile() || this.isPreview());
 	readonly isMinimized = computed(

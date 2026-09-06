@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, PLATFORM_ID, computed, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -24,7 +25,17 @@ export class SharePageComponent {
 	private readonly _activatedRoute = inject(ActivatedRoute);
 	private readonly _userService = inject(UserService);
 	private readonly _eventService = inject(EventService);
+	private readonly _isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 	readonly translateService = inject(TranslateService);
+
+	/**
+	 * The events/lectures domain has no backend — every event only exists in the
+	 * `localStorage` of the browser/origin that created it. Building the link from
+	 * the current origin (instead of the canonical production URL) means it always
+	 * points somewhere that actually has this event, whether that's a local dev
+	 * server or production.
+	 */
+	private readonly _origin = this._isBrowser ? window.location.origin : companyProfile.siteUrl;
 
 	readonly kind = toSignal(
 		this._activatedRoute.data.pipe(map((data) => (data['shareKind'] as ShareKind) ?? 'app')),
@@ -44,15 +55,15 @@ export class SharePageComponent {
 
 	readonly shareUrl = computed(() => {
 		if (this.kind() === 'profile') {
-			return `${companyProfile.siteUrl}/profile`;
+			return `${this._origin}/profile`;
 		}
 
 		const liveEvent = this.liveEvent();
 		if (liveEvent) {
-			return `${companyProfile.siteUrl}/event/${liveEvent.slug}`;
+			return `${this._origin}/event/${liveEvent.slug}`;
 		}
 
-		return `${companyProfile.siteUrl}/sign`;
+		return `${this._origin}/sign`;
 	});
 
 	readonly title = computed(() =>

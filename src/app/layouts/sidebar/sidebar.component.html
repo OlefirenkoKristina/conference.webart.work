@@ -97,6 +97,7 @@
 		icon="user-plus"
 	/>
 
+	@if (isOrganizer()) {
 	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
 
 	@if (showNames()) {
@@ -138,6 +139,7 @@
 		routerLink="/for-hosts"
 		icon="megaphone"
 	/>
+	}
 
 	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
 </aside>
