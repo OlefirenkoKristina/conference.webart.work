@@ -2,6 +2,7 @@
 	"name": "conference",
 	"private": true,
 	"version": "22.0.2",
+	"packageManager": "pnpm@11.25.0",
 	"scripts": {
 		"start": "ng serve",
 		"build": "ng build --configuration production && node tools/seo/generate-static-seo.mjs",
