@@ -58,13 +58,25 @@
 					</div>
 
 					<div>
-						<input
-							pPassword
-							class="w-full"
-							[placeholder]="translateService.translate('Введіть пароль...')()"
-							[formField]="signForm.password"
-							[feedback]="false"
-						/>
+						<div class="relative">
+							<input
+								pPassword
+								#passwordInput="pPassword"
+								class="w-full pr-10"
+								[placeholder]="translateService.translate('Введіть пароль...')()"
+								[formField]="signForm.password"
+								[feedback]="false"
+							/>
+							<button
+								type="button"
+								[pPasswordToggleMask]="passwordInput"
+								[showLabel]="translateService.translate('Показати пароль')()"
+								[hideLabel]="translateService.translate('Приховати пароль')()"
+								class="absolute right-3 top-1/2 grid -translate-y-1/2 place-items-center border-0 bg-transparent p-0 text-[var(--c-text-muted)]"
+							>
+								<i class="pi" [class.pi-eye]="!passwordInput.visible()" [class.pi-eye-slash]="passwordInput.visible()"></i>
+							</button>
+						</div>
 						<app-field-error [field]="signForm.password" />
 					</div>
 

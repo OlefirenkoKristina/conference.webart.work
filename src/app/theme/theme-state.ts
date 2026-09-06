@@ -15,7 +15,6 @@ const ROUNDED_SCALE = { none: '0', xs: '2px', sm: '4px', md: '6px', lg: '8px', x
 const SQUARE_SCALE = { none: '0', xs: '0', sm: '0', md: '0', lg: '0', xl: '0' };
 
 interface PersistedTheme {
-	mode?: ThemeMode;
 	density?: ThemeDensity;
 	radius?: ThemeRadius;
 }
@@ -84,6 +83,12 @@ export class ThemeState {
 		this.persist();
 	}
 
+	/**
+	 * Mode is intentionally never read back from storage: every load — any
+	 * account, any browser — starts dark, matching the attribute `index.html`
+	 * already stamped onto `<html>` before Angular even bootstraps. Density
+	 * and radius remain per-visitor preferences.
+	 */
 	private restore(): void {
 		let stored: PersistedTheme | null = null;
 		try {
@@ -93,15 +98,14 @@ export class ThemeState {
 			stored = null;
 		}
 
-		const mode = stored?.mode ?? 'dark';
 		const density = stored?.density ?? 'comfortable';
 		const radius = stored?.radius ?? 'rounded';
 
-		this.mode.set(mode);
+		this.mode.set('dark');
 		this.density.set(density);
 		this.radius.set(radius);
 
-		document.documentElement.setAttribute('data-mode', mode);
+		document.documentElement.setAttribute('data-mode', 'dark');
 		document.documentElement.setAttribute('data-density', density);
 		document.documentElement.setAttribute('data-radius', radius);
 		if (radius === 'square') {
@@ -109,12 +113,10 @@ export class ThemeState {
 		}
 	}
 
+	/** Deliberately excludes `mode` — a light toggle during a session must not survive a reload. */
 	private persist(): void {
 		try {
-			localStorage.setItem(
-				STORAGE_KEY,
-				JSON.stringify({ mode: this.mode(), density: this.density(), radius: this.radius() }),
-			);
+			localStorage.setItem(STORAGE_KEY, JSON.stringify({ density: this.density(), radius: this.radius() }));
 		} catch {
 			// ignore write failures (e.g. storage disabled/full)
 		}
