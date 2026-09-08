@@ -22,7 +22,11 @@
 						<p-tag [value]="lecture.topic"></p-tag>
 					</div>
 					<h1 class="m-0 mt-1 truncate text-base leading-snug font-semibold sm:text-lg">{{ lecture.title }}</h1>
-					<small class="opacity-60">{{ lecture.speaker }} · {{ lecture.time }}</small>
+					@if (lecture.speaker || lecture.time) {
+						<small class="opacity-60">
+							{{ lecture.speaker }}@if (lecture.speaker && lecture.time) { · }{{ lecture.time }}
+						</small>
+					}
 				</div>
 				<i
 					class="pi shrink-0 opacity-70"
@@ -34,6 +38,18 @@
 			@if (lectureExpanded()) {
 				<div class="flex flex-col gap-3 border-t border-[var(--c-border)] p-3 text-[var(--c-text-primary)]">
 					<p class="m-0 text-sm leading-relaxed">{{ lecture.content }}</p>
+
+					@if (lecture.link) {
+						<a
+							[href]="lecture.link"
+							target="_blank"
+							rel="noopener"
+							class="flex items-center gap-2 self-start rounded-card border border-[var(--c-border)] p-2 text-sm"
+						>
+							<i class="pi pi-link"></i>
+							<span translate>Перейти до лекції</span>
+						</a>
+					}
 
 					@if (lecture.fileName && lecture.fileDataUrl) {
 						<a

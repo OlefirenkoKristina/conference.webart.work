@@ -12,4 +12,6 @@ export interface Lecture extends StoredEntity {
 	fileName?: string;
 	/** The attached file, inlined as a data URL (no backend to upload to). */
 	fileDataUrl?: string;
+	/** External link to the lecture itself (stream, meeting room, recording, etc.). */
+	link?: string;
 }

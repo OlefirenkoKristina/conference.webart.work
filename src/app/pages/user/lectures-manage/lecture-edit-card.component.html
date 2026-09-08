@@ -7,6 +7,9 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="truncate font-semibold">{{ lecture().title || 'Без назви' }}</span>
+				@if (lecture().link) {
+					<i class="pi pi-link text-sm opacity-70"></i>
+				}
 				@if (lecture().fileName) {
 					<i class="pi pi-paperclip text-sm opacity-70"></i>
 				}
@@ -31,6 +34,8 @@
 	@if (expanded()) {
 		<div class="mt-3 flex flex-col gap-2">
 			<input pInputText [(ngModel)]="title" [placeholder]="'Назва лекції'" />
+
+			<input pInputText [(ngModel)]="link" type="url" [placeholder]="'Покликання на лекцію'" />
 
 			<div class="flex flex-col gap-1">
 				<small class="opacity-70" translate>Файл лекції (презентація, PDF тощо)</small>

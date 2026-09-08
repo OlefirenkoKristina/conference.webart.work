@@ -33,6 +33,7 @@ export class LectureEditCardComponent implements OnInit {
 	readonly created = output<Lecture>();
 
 	readonly title = signal('');
+	readonly link = signal('');
 	readonly fileName = signal('');
 	readonly fileDataUrl = signal('');
 	readonly fileError = signal('');
@@ -46,6 +47,7 @@ export class LectureEditCardComponent implements OnInit {
 		const lecture = this.lecture();
 		return (
 			this.title() !== lecture.title ||
+			this.link() !== (lecture.link ?? '') ||
 			this.fileName() !== (lecture.fileName ?? '') ||
 			this.fileDataUrl() !== (lecture.fileDataUrl ?? '')
 		);
@@ -54,6 +56,7 @@ export class LectureEditCardComponent implements OnInit {
 	ngOnInit(): void {
 		const lecture = this.lecture();
 		this.title.set(lecture.title);
+		this.link.set(lecture.link ?? '');
 		this.fileName.set(lecture.fileName ?? '');
 		this.fileDataUrl.set(lecture.fileDataUrl ?? '');
 	}
@@ -98,6 +101,7 @@ export class LectureEditCardComponent implements OnInit {
 	save(): void {
 		const fields = {
 			title: this.title().trim(),
+			link: this.link().trim(),
 			fileName: this.fileName(),
 			fileDataUrl: this.fileDataUrl(),
 		};
