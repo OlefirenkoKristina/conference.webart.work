@@ -22,6 +22,15 @@
 					<span translate>Create your event</span>
 				</a>
 			</div>
+
+			<div class="mt-1 flex flex-wrap justify-center gap-3">
+				<a pButton [text]="true" size="small" routerLink="/for-attendees">
+					<span translate>For attendees</span>
+				</a>
+				<a pButton [text]="true" size="small" routerLink="/for-hosts">
+					<span translate>For hosts</span>
+				</a>
+			</div>
 		</section>
 
 		<section class="grid gap-4 sm:grid-cols-3">
@@ -41,6 +50,11 @@
 			</p-card>
 			<p-card>
 				<i class="pi pi-book text-xl"></i>
+				<span
+					class="mt-2 inline-flex w-fit items-center rounded-full bg-[var(--c-primary)] px-2 py-0.5 text-sm text-white"
+					translate
+					>For hosts</span
+				>
 				<div class="mt-2 font-semibold" translate>Chapter feedback</div>
 				<p class="mt-1 text-sm opacity-80" translate>
 					Get honest per-chapter reactions the audience never sees aggregated.
