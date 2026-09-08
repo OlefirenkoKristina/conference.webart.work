@@ -18,6 +18,12 @@ import { FeedbackService } from './feedback.service';
 const CONTACT_STORAGE_KEY = 'feedback:contact';
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
+const WOULD_USE_LABELS: Record<WouldUse, string> = {
+	yes: 'Так',
+	maybe: 'Можливо',
+	no: 'Ні',
+};
+
 @Component({
 	imports: [FormsModule, ButtonModule, TranslateDirective],
 	templateUrl: './feedback.component.html',
@@ -43,6 +49,10 @@ export class FeedbackComponent {
 	readonly uploadError = signal(false);
 
 	readonly wouldUseOptions: WouldUse[] = ['yes', 'maybe', 'no'];
+
+	wouldUseLabel(option: WouldUse): string {
+		return WOULD_USE_LABELS[option];
+	}
 
 	readonly isFeedbackValid = computed(() => this.feedbackModel().overallImpression.trim().length > 0);
 	readonly isBugReportValid = computed(() => {

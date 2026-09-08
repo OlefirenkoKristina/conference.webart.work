@@ -1,19 +1,21 @@
 <div class="feedback">
 	@if (!kind()) {
-		<h1 class="feedback__title" translate>Feedback</h1>
-		<p class="feedback__subtitle" translate>What would you like to share?</p>
+		<h1 class="feedback__title" translate>Зворотний зв'язок</h1>
+		<p class="feedback__subtitle" translate>Чим ви хочете поділитися?</p>
 
 		<div class="feedback__choices">
 			<button type="button" class="feedback__choice" (click)="choose('feedback')">
 				<i class="pi pi-comment feedback__choice-icon"></i>
-				<span class="feedback__choice-title" translate>Share feedback</span>
-				<span class="feedback__choice-text" translate>Tell us what you liked, disliked, or what's missing.</span>
+				<span class="feedback__choice-title" translate>Залишити відгук</span>
+				<span class="feedback__choice-text" translate
+					>Розкажіть, що вам сподобалось, не сподобалось або чого не вистачає.</span
+				>
 			</button>
 
 			<button type="button" class="feedback__choice" (click)="choose('bug')">
 				<i class="pi pi-exclamation-triangle feedback__choice-icon"></i>
-				<span class="feedback__choice-title" translate>Report a bug</span>
-				<span class="feedback__choice-text" translate>Something didn't work the way you expected.</span>
+				<span class="feedback__choice-title" translate>Повідомити про помилку</span>
+				<span class="feedback__choice-text" translate>Щось спрацювало не так, як ви очікували.</span>
 			</button>
 		</div>
 	}
@@ -21,23 +23,23 @@
 	@if (kind() === 'feedback') {
 		<button type="button" class="feedback__back" (click)="back()">
 			<i class="pi pi-arrow-left"></i>
-			<span translate>Back</span>
+			<span translate>Назад</span>
 		</button>
 
 		@if (submitted()) {
 			<div class="feedback__thanks">
 				<i class="pi pi-check-circle feedback__thanks-icon"></i>
-				<p translate>Thank you for your feedback!</p>
-				<button pButton type="button" (click)="back()"><span translate>Done</span></button>
+				<p translate>Дякуємо за ваш відгук!</p>
+				<button pButton type="button" (click)="back()"><span translate>Готово</span></button>
 			</div>
 		} @else {
 			<form class="feedback__form" (submit)="submitFeedback(); $event.preventDefault()">
 				<div class="feedback__field">
-					<label class="feedback__label" translate>Overall impression</label>
+					<label class="feedback__label" translate>Загальне враження</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
-						[placeholder]="translateService.translate('How did the software feel? What was your first impression?')()"
+						[placeholder]="translateService.translate('Яким було враження від застосунку? Яким було перше враження?')()"
 						[ngModel]="feedbackModel().overallImpression"
 						(ngModelChange)="feedbackModel.update((m) => ({ ...m, overallImpression: $event }))"
 						name="overallImpression"
@@ -45,11 +47,11 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>What I liked</label>
+					<label class="feedback__label" translate>Що сподобалось</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
-						[placeholder]="translateService.translate('What worked well? What felt useful, easy, fast, or well designed?')()"
+						[placeholder]="translateService.translate('Що спрацювало добре? Що здалось корисним, простим, швидким чи вдало продуманим?')()"
 						[ngModel]="feedbackModel().liked"
 						(ngModelChange)="feedbackModel.update((m) => ({ ...m, liked: $event }))"
 						name="liked"
@@ -57,11 +59,11 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>What confused me</label>
+					<label class="feedback__label" translate>Що збентежило</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
-						[placeholder]="translateService.translate('Was anything difficult to understand?')()"
+						[placeholder]="translateService.translate('Чи було щось складно зрозуміти?')()"
 						[ngModel]="feedbackModel().confused"
 						(ngModelChange)="feedbackModel.update((m) => ({ ...m, confused: $event }))"
 						name="confused"
@@ -69,11 +71,11 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>What I didn't like</label>
+					<label class="feedback__label" translate>Що не сподобалось</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
-						[placeholder]="translateService.translate('Anything annoying, unnecessary, difficult, slow, or poorly designed?')()"
+						[placeholder]="translateService.translate('Що дратувало, було зайвим, складним, повільним або невдало продуманим?')()"
 						[ngModel]="feedbackModel().disliked"
 						(ngModelChange)="feedbackModel.update((m) => ({ ...m, disliked: $event }))"
 						name="disliked"
@@ -81,11 +83,11 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>Ideas & suggestions</label>
+					<label class="feedback__label" translate>Ідеї та пропозиції</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
-						[placeholder]="translateService.translate('What would you change or improve?')()"
+						[placeholder]="translateService.translate('Що б ви змінили або покращили?')()"
 						[ngModel]="feedbackModel().ideas"
 						(ngModelChange)="feedbackModel.update((m) => ({ ...m, ideas: $event }))"
 						name="ideas"
@@ -93,11 +95,11 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>What was missing</label>
+					<label class="feedback__label" translate>Чого не вистачало</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
-						[placeholder]="translateService.translate('Did you expect something that wasn\'t there?')()"
+						[placeholder]="translateService.translate('Чи очікували ви чогось, чого не було?')()"
 						[ngModel]="feedbackModel().missing"
 						(ngModelChange)="feedbackModel.update((m) => ({ ...m, missing: $event }))"
 						name="missing"
@@ -105,7 +107,7 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>Would you use this?</label>
+					<label class="feedback__label" translate>Чи користувалися б ви цим?</label>
 					<div class="feedback__toggle-group">
 						@for (option of wouldUseOptions; track option) {
 							<button
@@ -117,14 +119,14 @@
 								[attr.aria-pressed]="feedbackModel().wouldUse === option"
 								(click)="setWouldUse(option)"
 							>
-								{{ translateService.translate(option)() }}
+								{{ wouldUseLabel(option) }}
 							</button>
 						}
 					</div>
 					<textarea
 						class="feedback__textarea"
 						rows="2"
-						[placeholder]="translateService.translate('Why?')()"
+						[placeholder]="translateService.translate('Чому?')()"
 						[ngModel]="feedbackModel().wouldUseWhy"
 						(ngModelChange)="feedbackModel.update((m) => ({ ...m, wouldUseWhy: $event }))"
 						name="wouldUseWhy"
@@ -132,11 +134,11 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>Anything else</label>
+					<label class="feedback__label" translate>Що ще</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
-						[placeholder]="translateService.translate('Anything else you want to tell us — write freely.')()"
+						[placeholder]="translateService.translate('Що ще хочете нам розповісти — пишіть вільно.')()"
 						[ngModel]="feedbackModel().other"
 						(ngModelChange)="feedbackModel.update((m) => ({ ...m, other: $event }))"
 						name="other"
@@ -145,7 +147,7 @@
 
 				@if (!isAuthenticated()) {
 					<div class="feedback__field">
-						<label class="feedback__label" translate>Your name</label>
+						<label class="feedback__label" translate>Ваше ім'я</label>
 						<input
 							class="feedback__input"
 							type="text"
@@ -156,7 +158,7 @@
 					</div>
 
 					<div class="feedback__field">
-						<label class="feedback__label" translate>Your email</label>
+						<label class="feedback__label" translate>Ваш email</label>
 						<input
 							class="feedback__input"
 							type="email"
@@ -168,11 +170,11 @@
 				}
 
 				@if (error()) {
-					<p class="feedback__error" translate>Something went wrong. Please try again.</p>
+					<p class="feedback__error" translate>Щось пішло не так. Спробуйте ще раз.</p>
 				}
 
 				<button pButton type="submit" [disabled]="!isFeedbackValid() || submitting()">
-					<span [translate]="submitting() ? 'Sending...' : 'Send feedback'"></span>
+					<span [translate]="submitting() ? 'Надсилання...' : 'Надіслати відгук'"></span>
 				</button>
 			</form>
 		}
@@ -181,19 +183,19 @@
 	@if (kind() === 'bug') {
 		<button type="button" class="feedback__back" (click)="back()">
 			<i class="pi pi-arrow-left"></i>
-			<span translate>Back</span>
+			<span translate>Назад</span>
 		</button>
 
 		@if (submitted()) {
 			<div class="feedback__thanks">
 				<i class="pi pi-check-circle feedback__thanks-icon"></i>
-				<p translate>Thank you for the report!</p>
-				<button pButton type="button" (click)="back()"><span translate>Done</span></button>
+				<p translate>Дякуємо за повідомлення!</p>
+				<button pButton type="button" (click)="back()"><span translate>Готово</span></button>
 			</div>
 		} @else {
 			<form class="feedback__form" (submit)="submitBugReport(); $event.preventDefault()">
 				<div class="feedback__field">
-					<label class="feedback__label" translate>What happened?</label>
+					<label class="feedback__label" translate>Що сталося?</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
@@ -204,7 +206,7 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>What did you expect?</label>
+					<label class="feedback__label" translate>Що ви очікували?</label>
 					<textarea
 						class="feedback__textarea"
 						rows="3"
@@ -215,14 +217,14 @@
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>Steps to reproduce</label>
+					<label class="feedback__label" translate>Кроки для відтворення</label>
 					@for (step of bugReportModel().steps; track $index) {
 						<div class="feedback__step">
 							<span class="feedback__step-index">{{ $index + 1 }}</span>
 							<input
 								class="feedback__input"
 								type="text"
-								[placeholder]="translateService.translate('Describe this step...')()"
+								[placeholder]="translateService.translate('Опишіть цей крок...')()"
 								[ngModel]="step"
 								(ngModelChange)="updateStep($index, $event)"
 								name="step-{{ $index }}"
@@ -231,7 +233,7 @@
 								<button
 									type="button"
 									class="feedback__step-remove"
-									[attr.aria-label]="translateService.translate('Remove step')()"
+									[attr.aria-label]="translateService.translate('Видалити крок')()"
 									(click)="removeStep($index)"
 								>
 									<i class="pi pi-times"></i>
@@ -241,12 +243,12 @@
 					}
 					<button pButton type="button" severity="secondary" size="small" (click)="addStep()">
 						<i class="pi pi-plus"></i>
-						<span translate>Add step</span>
+						<span translate>Додати крок</span>
 					</button>
 				</div>
 
 				<div class="feedback__field">
-					<label class="feedback__label" translate>Attachments</label>
+					<label class="feedback__label" translate>Вкладення</label>
 					<input
 						class="feedback__file-input"
 						type="file"
@@ -256,11 +258,11 @@
 					/>
 
 					@if (uploadingFiles() > 0) {
-						<p class="feedback__hint" translate>Uploading...</p>
+						<p class="feedback__hint" translate>Завантаження...</p>
 					}
 
 					@if (uploadError()) {
-						<p class="feedback__error" translate>One of your files failed to upload. Please try again.</p>
+						<p class="feedback__error" translate>Один із файлів не вдалося завантажити. Спробуйте ще раз.</p>
 					}
 
 					@if (bugReportModel().files.length) {
@@ -271,7 +273,7 @@
 									<button
 										type="button"
 										class="feedback__step-remove"
-										[attr.aria-label]="translateService.translate('Remove file')()"
+										[attr.aria-label]="translateService.translate('Видалити файл')()"
 										(click)="removeFile($index)"
 									>
 										<i class="pi pi-times"></i>
@@ -284,7 +286,7 @@
 
 				@if (!isAuthenticated()) {
 					<div class="feedback__field">
-						<label class="feedback__label" translate>Your name</label>
+						<label class="feedback__label" translate>Ваше ім'я</label>
 						<input
 							class="feedback__input"
 							type="text"
@@ -295,7 +297,7 @@
 					</div>
 
 					<div class="feedback__field">
-						<label class="feedback__label" translate>Your email</label>
+						<label class="feedback__label" translate>Ваш email</label>
 						<input
 							class="feedback__input"
 							type="email"
@@ -307,11 +309,11 @@
 				}
 
 				@if (error()) {
-					<p class="feedback__error" translate>Something went wrong. Please try again.</p>
+					<p class="feedback__error" translate>Щось пішло не так. Спробуйте ще раз.</p>
 				}
 
 				<button pButton type="submit" [disabled]="!isBugReportValid() || submitting() || uploadingFiles() > 0">
-					<span [translate]="submitting() ? 'Sending...' : 'Send report'"></span>
+					<span [translate]="submitting() ? 'Надсилання...' : 'Надіслати повідомлення'"></span>
 				</button>
 			</form>
 		}
