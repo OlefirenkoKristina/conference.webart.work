@@ -11,4 +11,5 @@ export const NEW_LECTURE: Lecture = {
 	link: '',
 	fileName: '',
 	fileDataUrl: '',
+	conferenceId: '',
 };

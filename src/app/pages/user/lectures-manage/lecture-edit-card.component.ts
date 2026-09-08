@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from '@wawjs/ngx-prime/button';
 import { CardModule } from '@wawjs/ngx-prime/card';
 import { InputTextModule } from '@wawjs/ngx-prime/inputtext';
+import { SelectModule } from '@wawjs/ngx-prime/select';
 import { TranslateDirective } from '@wawjs/ngx-translate';
+import { ConferenceService } from '../../../conference/conference.service';
 import { Lecture } from '../../../conference/lecture/lecture.interface';
 import { LectureService } from '../../../conference/lecture/lecture.service';
 
@@ -17,12 +19,15 @@ import { LectureService } from '../../../conference/lecture/lecture.service';
 @Component({
 	selector: 'app-lecture-edit-card',
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [ButtonModule, CardModule, InputTextModule, NgClass, FormsModule, TranslateDirective],
+	imports: [ButtonModule, CardModule, InputTextModule, SelectModule, NgClass, FormsModule, TranslateDirective],
 	templateUrl: './lecture-edit-card.component.html',
 	styleUrl: './lecture-edit-card.component.scss',
 })
 export class LectureEditCardComponent implements OnInit {
 	private readonly _lectureService = inject(LectureService);
+	private readonly _conferenceService = inject(ConferenceService);
+
+	readonly conferences = this._conferenceService.items;
 
 	readonly lecture = input.required<Lecture>();
 	readonly expanded = input(false);
@@ -34,6 +39,7 @@ export class LectureEditCardComponent implements OnInit {
 
 	readonly title = signal('');
 	readonly link = signal('');
+	readonly conferenceId = signal('');
 	readonly fileName = signal('');
 	readonly fileDataUrl = signal('');
 	readonly fileError = signal('');
@@ -48,6 +54,7 @@ export class LectureEditCardComponent implements OnInit {
 		return (
 			this.title() !== lecture.title ||
 			this.link() !== (lecture.link ?? '') ||
+			this.conferenceId() !== (lecture.conferenceId ?? '') ||
 			this.fileName() !== (lecture.fileName ?? '') ||
 			this.fileDataUrl() !== (lecture.fileDataUrl ?? '')
 		);
@@ -57,6 +64,7 @@ export class LectureEditCardComponent implements OnInit {
 		const lecture = this.lecture();
 		this.title.set(lecture.title);
 		this.link.set(lecture.link ?? '');
+		this.conferenceId.set(lecture.conferenceId ?? '');
 		this.fileName.set(lecture.fileName ?? '');
 		this.fileDataUrl.set(lecture.fileDataUrl ?? '');
 	}
@@ -102,6 +110,7 @@ export class LectureEditCardComponent implements OnInit {
 		const fields = {
 			title: this.title().trim(),
 			link: this.link().trim(),
+			conferenceId: this.conferenceId(),
 			fileName: this.fileName(),
 			fileDataUrl: this.fileDataUrl(),
 		};

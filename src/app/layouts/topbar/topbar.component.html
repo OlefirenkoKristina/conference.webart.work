@@ -4,15 +4,27 @@
 	<ul
 		class="m-0 flex w-full list-none items-center gap-2 p-0 max-md:justify-between max-md:gap-0"
 	>
+		<li class="inline-flex items-center">
+			<a
+				routerLink="/"
+				class="inline-flex h-9 w-9 items-center justify-center overflow-hidden p-1 text-[var(--c-text-secondary)] no-underline"
+				[attr.aria-label]="translateService.translate('Логотип')()"
+			>
+				<icon-spider style="--spider-w: 28px; --spider-h: 28px" />
+			</a>
+		</li>
+
+		@if (sidebarToggler()) {
 		<li
 			class="inline-flex items-center max-md:flex-1 max-md:justify-center"
 		>
 			<app-nav-icon
-				[routerLink]="sidebarToggler() ? '/dashboard' : '/'"
-				[name]="viewport() === 'mobile' ? '' : sidebarToggler() ? translateService.translate('Dashboard')() : ''"
-				[icon]="sidebarToggler() ? 'th-large' : 'home'"
+				routerLink="/conferences"
+				[name]="viewport() === 'mobile' ? '' : conferencesLabel()"
+				icon="microphone"
 			/>
 		</li>
+		}
 
 		<li class="mx-auto max-md:hidden"></li>
 

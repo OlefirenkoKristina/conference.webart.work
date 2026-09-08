@@ -1,0 +1,77 @@
+@if (conference(); as conferenceDoc) {
+	<div class="conference-public-page mx-auto flex w-full max-w-[720px] flex-col gap-3 p-3 sm:gap-4 sm:p-4">
+		<h1 class="m-0 text-lg font-semibold sm:text-xl">{{ conferenceDoc.title || 'Без назви' }}</h1>
+
+		@if (!lectures().length) {
+			<p-card>
+				<span translate>Лекцій поки немає.</span>
+			</p-card>
+		}
+
+		@for (lecture of lectures(); track lecture._id; let i = $index) {
+			<p-card class="cursor-pointer" (click)="toggleLecture(lecture._id)">
+				<div class="flex items-center justify-between gap-3 text-[var(--c-text-primary)]">
+					<div class="min-w-0 flex-1">
+						<div class="flex flex-wrap items-center gap-2">
+							<span class="text-xs font-semibold tracking-wide uppercase opacity-70">
+								<span translate>Лекція</span> {{ i + 1 }}
+							</span>
+							@if (lecture.topic) {
+								<p-tag [value]="lecture.topic"></p-tag>
+							}
+						</div>
+						<div class="mt-1 truncate font-semibold">{{ lecture.title }}</div>
+						@if (lecture.speaker || lecture.time) {
+							<small class="opacity-60">
+								{{ lecture.speaker }}@if (lecture.speaker && lecture.time) { · }{{ lecture.time }}
+							</small>
+						}
+					</div>
+					<i
+						class="pi shrink-0 opacity-60"
+						[class.pi-chevron-down]="expandedLectureId() !== lecture._id"
+						[class.pi-chevron-up]="expandedLectureId() === lecture._id"
+					></i>
+				</div>
+
+				@if (expandedLectureId() === lecture._id) {
+					<div class="mt-3 flex flex-col gap-3 border-t border-[var(--c-border)] pt-3 text-sm" (click)="$event.stopPropagation()">
+						@if (lecture.content) {
+							<p class="m-0 leading-relaxed">{{ lecture.content }}</p>
+						}
+
+						@if (lecture.link) {
+							<a
+								[href]="lecture.link"
+								target="_blank"
+								rel="noopener"
+								class="flex items-center gap-2 self-start rounded-card border border-[var(--c-border)] p-2"
+							>
+								<i class="pi pi-link"></i>
+								<span translate>Перейти до лекції</span>
+							</a>
+						}
+
+						@if (lecture.fileName && lecture.fileDataUrl) {
+							<a
+								[href]="lecture.fileDataUrl"
+								[download]="lecture.fileName"
+								class="flex items-center gap-2 self-start rounded-card border border-[var(--c-border)] p-2"
+							>
+								<i class="pi pi-file"></i>
+								<span translate>Завантажити матеріали</span>
+								<span class="opacity-70">({{ lecture.fileName }})</span>
+							</a>
+						}
+					</div>
+				}
+			</p-card>
+		}
+	</div>
+} @else {
+	<div class="mx-auto flex w-full max-w-[720px] flex-col gap-3 p-3 sm:p-4">
+		<p-card>
+			<span translate>Конференцію не знайдено.</span>
+		</p-card>
+	</div>
+}

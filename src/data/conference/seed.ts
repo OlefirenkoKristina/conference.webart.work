@@ -1,4 +1,5 @@
 import { Chapter, ChapterReaction } from '../../app/conference/chapter/chapter.interface';
+import { Conference } from '../../app/conference/conference.interface';
 import { Event } from '../../app/conference/event/event.interface';
 import { Lecture } from '../../app/conference/lecture/lecture.interface';
 import { Poll, PollAnswer } from '../../app/conference/poll/poll.interface';
@@ -10,6 +11,13 @@ import { Quiz, QuizAnswer } from '../../app/conference/quiz/quiz.interface';
  * this domain: each entity service seeds its `localStorage`-backed store
  * from the matching array below the first time it runs in a browser.
  */
+
+export const SEED_CONFERENCES: Conference[] = [
+	{
+		_id: 'conf-kpnu-2026-2027',
+		title: 'КПНУ 2026-2027',
+	},
+];
 
 export const SEED_EVENTS: Event[] = [
 	{
@@ -28,6 +36,7 @@ export const SEED_EVENTS: Event[] = [
 export const SEED_LECTURES: Lecture[] = [
 	{
 		_id: 'lec-ai-in-product-development',
+		conferenceId: 'conf-kpnu-2026-2027',
 		title: 'Штучний інтелект у продуктовій розробці',
 		speaker: 'Олена Коваль',
 		topic: 'Штучний інтелект',
@@ -41,6 +50,7 @@ export const SEED_LECTURES: Lecture[] = [
 	},
 	{
 		_id: 'lec-scaling-angular-apps',
+		conferenceId: 'conf-kpnu-2026-2027',
 		title: 'Масштабування Angular-застосунків',
 		speaker: 'Андрій Петренко',
 		topic: 'Фронтенд',
@@ -54,6 +64,7 @@ export const SEED_LECTURES: Lecture[] = [
 	},
 	{
 		_id: 'lec-resilient-microservices',
+		conferenceId: 'conf-kpnu-2026-2027',
 		title: 'Побудова відмовостійких мікросервісів',
 		speaker: 'Марія Іванова',
 		topic: 'Бекенд',

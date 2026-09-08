@@ -14,4 +14,6 @@ export interface Lecture extends StoredEntity {
 	fileDataUrl?: string;
 	/** External link to the lecture itself (stream, meeting room, recording, etc.). */
 	link?: string;
+	/** The conference (e.g. `КПНУ 2026-2027`) this lecture is scheduled under. */
+	conferenceId?: string;
 }

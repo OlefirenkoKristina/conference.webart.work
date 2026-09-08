@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { MetaGuard } from '@wawjs/ngx-core';
-import { adminsGuard, authenticatedGuard, guestGuard } from '@wawjs/ngx-bos';
+import { authenticatedGuard, guestGuard } from '@wawjs/ngx-bos';
 
 export const routes: Routes = [
 	{
@@ -47,19 +47,6 @@ export const routes: Routes = [
 				(m) => m.UserComponent,
 			),
 		children: [
-			{
-				path: 'dashboard',
-				canActivate: [MetaGuard],
-				data: {
-					meta: {
-						title: 'Панель',
-					},
-				},
-				loadChildren: () =>
-					import('./pages/user/dashboard/dashboard.routes').then(
-						(m) => m.routes,
-					),
-			},
 			{
 				path: 'profile',
 				canActivate: [MetaGuard],
@@ -113,15 +100,15 @@ export const routes: Routes = [
 					),
 			},
 			{
-				path: 'lectures',
+				path: 'conferences',
 				canActivate: [MetaGuard],
 				data: {
 					meta: {
-						title: 'Лекції',
+						title: 'Конференції',
 					},
 				},
 				loadChildren: () =>
-					import('./pages/user/lectures/lectures.routes').then(
+					import('./pages/user/conferences/conferences.routes').then(
 						(m) => m.routes,
 					),
 			},
@@ -195,16 +182,66 @@ export const routes: Routes = [
 						(m) => m.routes,
 					),
 			},
+			{
+				path: 'users',
+				canActivate: [MetaGuard],
+				data: {
+					meta: {
+						title: 'Користувачі',
+					},
+				},
+				loadChildren: () =>
+					import('@wawjs/ngx-bos').then((m) => m.usersRoutes),
+			},
+			{
+				path: 'forms',
+				canActivate: [MetaGuard],
+				data: {
+					meta: {
+						title: 'Форми',
+					},
+				},
+				loadChildren: () =>
+					import('@wawjs/ngx-bos').then((m) => m.formsRoutes),
+			},
+			{
+				path: 'form/:formId',
+				canActivate: [MetaGuard],
+				data: {
+					meta: {
+						title: 'Форми',
+					},
+				},
+				loadChildren: () =>
+					import('@wawjs/ngx-bos').then((m) => m.formRoutes),
+			},
+			{
+				path: 'translations',
+				canActivate: [MetaGuard],
+				data: {
+					meta: {
+						title: 'Переклади',
+					},
+				},
+				loadChildren: () =>
+					import('./pages/user/translations/translations.routes').then(
+						(m) => m.routes,
+					),
+			},
 		],
 	},
 	{
-		path: 'admin',
-		canActivate: [adminsGuard],
+		path: 'conf',
+		canActivate: [MetaGuard],
+		data: {
+			meta: {
+				title: 'Конференція',
+			},
+		},
 		loadComponent: () =>
-			import('./layouts/user/user.component').then(
-				(m) => m.UserComponent,
+			import('./pages/conference/public/conference-public.component').then(
+				(m) => m.ConferencePublicComponent,
 			),
-		children: [],
 	},
 	{
 		path: 'event/:slug',

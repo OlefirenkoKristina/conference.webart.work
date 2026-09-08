@@ -37,6 +37,16 @@
 
 			<input pInputText [(ngModel)]="link" type="url" [placeholder]="'Покликання на лекцію'" />
 
+			<p-select
+				[(ngModel)]="conferenceId"
+				[options]="conferences()"
+				optionLabel="title"
+				optionValue="_id"
+				[showClear]="true"
+				[placeholder]="'Конференція'"
+				class="w-full"
+			/>
+
 			<div class="flex flex-col gap-1">
 				<small class="opacity-70" translate>Файл лекції (презентація, PDF тощо)</small>
 

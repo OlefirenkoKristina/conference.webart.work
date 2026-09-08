@@ -1,0 +1,61 @@
+<div class="mx-auto flex w-full max-w-[960px] flex-col gap-3 p-3 sm:gap-4 sm:p-4">
+	<div class="flex items-center justify-between gap-3">
+		<h1 class="m-0 text-lg font-semibold sm:text-xl" translate>Переклади</h1>
+		<button pButton type="button" (click)="downloadUaJson()">
+			<i class="pi pi-download"></i>
+			<span translate>Завантажити ua.json</span>
+		</button>
+	</div>
+
+	@if (!loaded()) {
+		<p-card>
+			<span translate>Завантаження...</span>
+		</p-card>
+	} @else {
+		<p-card>
+			<div class="flex flex-wrap items-center gap-3">
+				<input
+					pInputText
+					class="min-w-[240px] flex-1"
+					[(ngModel)]="filter"
+					[placeholder]="'Пошук...'"
+				/>
+				<label class="flex items-center gap-2 text-sm">
+					<input type="checkbox" [(ngModel)]="onlyMissing" />
+					<span translate>Тільки неперекладені</span>
+				</label>
+			</div>
+		</p-card>
+
+		<div class="flex flex-col overflow-hidden rounded-card border border-[var(--c-border)]">
+			<div
+				class="grid grid-cols-[1fr_1fr_auto] gap-3 border-b border-[var(--c-border)] bg-[var(--c-bg-tertiary)] p-2 text-xs font-semibold tracking-wide uppercase opacity-70"
+			>
+				<span translate>Англійська (ключ)</span>
+				<span translate>Українська</span>
+				<span></span>
+			</div>
+
+			@for (row of filteredRows(); track row.index) {
+				<div class="grid grid-cols-[1fr_1fr_auto] items-center gap-3 border-b border-[var(--c-border)] p-2 text-sm last:border-b-0">
+					<span class="break-words">{{ row.source }}</span>
+					<input
+						pInputText
+						class="w-full"
+						[ngModel]="translation(row.index)"
+						(ngModelChange)="setTranslation(row.index, $event)"
+					/>
+					@if (isMissing(row.index)) {
+						<p-tag severity="warn" [value]="'Немає'"></p-tag>
+					} @else {
+						<span></span>
+					}
+				</div>
+			}
+
+			@if (!filteredRows().length) {
+				<div class="p-3 text-sm opacity-60" translate>Нічого не знайдено.</div>
+			}
+		</div>
+	}
+</div>

@@ -8,10 +8,8 @@ import { RouterLink } from '@angular/router';
 import { UserService } from '@wawjs/ngx-bos';
 import { TranslateDirective, TranslateService } from '@wawjs/ngx-translate';
 import { NavIconComponent } from '../../shared/nav-icon/nav-icon.component';
+import { OrganizerService } from '../../conference/organizer.service';
 import { SidebarService } from './sidebar.service';
-
-/** Only this account sees the organizer tools — everyone else gets the plain attendee sidebar. */
-const CEO_EMAIL = 'ceo@webart.work';
 
 @Component({
 	selector: 'layout-sidebar',
@@ -23,6 +21,7 @@ export class SidebarComponent {
 	readonly userService = inject(UserService);
 	readonly translateService = inject(TranslateService);
 	readonly sidebarService = inject(SidebarService);
+	private readonly _organizerService = inject(OrganizerService);
 
 	readonly showNames = this.sidebarService.showNames;
 	readonly widthPx = this.sidebarService.widthPx;
@@ -30,9 +29,7 @@ export class SidebarComponent {
 	readonly isPreview = this.sidebarService.previewVisible;
 	readonly isMobile = this.sidebarService.isMobile;
 
-	readonly isOrganizer = computed(
-		() => (this.userService.user()?.email || '').trim().toLowerCase() === CEO_EMAIL,
-	);
+	readonly isOrganizer = this._organizerService.isOrganizer;
 
 	readonly isOverlay = computed(() => this.isMobile() || this.isPreview());
 	readonly isMinimized = computed(

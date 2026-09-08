@@ -1,0 +1,72 @@
+<div class="mx-auto flex w-full max-w-[720px] flex-col gap-3 p-3 sm:gap-4 sm:p-4">
+	<div class="flex items-center justify-between gap-3">
+		<h1 class="m-0 text-lg font-semibold sm:text-xl" translate>Конференції</h1>
+		@if (isOrganizer()) {
+			<button
+				pButton
+				type="button"
+				[text]="true"
+				[attr.aria-label]="'Створити конференцію'"
+				(click)="toggleCreateForm()"
+			>
+				<i class="pi pi-plus"></i>
+			</button>
+		}
+	</div>
+
+	@if (isOrganizer() && showCreateForm()) {
+		<p-card>
+			<div class="flex gap-2">
+				<input
+					pInputText
+					class="w-full"
+					[(ngModel)]="newTitle"
+					[placeholder]="'Назва конференції'"
+					(keyup.enter)="createConference()"
+					autofocus
+				/>
+				<button pButton type="button" (click)="createConference()">
+					<i class="pi pi-plus"></i>
+					<span translate>Створити</span>
+				</button>
+			</div>
+		</p-card>
+	}
+
+	@if (!conferences().length) {
+		<p-card>
+			<span translate>Конференцій поки немає.</span>
+		</p-card>
+	}
+
+	@for (conference of conferences(); track conference._id) {
+		<p-card [routerLink]="[conference._id]" class="cursor-pointer">
+			<div class="flex items-center justify-between gap-3 text-[var(--c-text-primary)]">
+				<span class="font-semibold">{{ conference.title || 'Без назви' }}</span>
+				<div class="flex items-center gap-1">
+					@if (isOrganizer()) {
+						<button
+							pButton
+							type="button"
+							[text]="true"
+							[routerLink]="[conference._id, 'share']"
+							(click)="$event.stopPropagation()"
+						>
+							<i class="pi pi-qrcode"></i>
+						</button>
+						<button
+							pButton
+							type="button"
+							severity="danger"
+							[text]="true"
+							(click)="deleteConference(conference._id, conference.title); $event.stopPropagation()"
+						>
+							<i class="pi pi-trash"></i>
+						</button>
+					}
+					<i class="pi pi-chevron-right opacity-60"></i>
+				</div>
+			</div>
+		</p-card>
+	}
+</div>

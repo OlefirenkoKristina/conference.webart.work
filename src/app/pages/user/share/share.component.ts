@@ -10,8 +10,9 @@ import { TranslateService } from '@wawjs/ngx-translate';
 import { QrCodeComponent } from '../../../shared/qr-code/qr-code.component';
 import { companyProfile } from '../../../company/company.data';
 import { EventService } from '../../../conference/event/event.service';
+import { ConferenceService } from '../../../conference/conference.service';
 
-export type ShareKind = 'app' | 'profile';
+export type ShareKind = 'app' | 'profile' | 'conference';
 
 @Component({
 	selector: 'app-share',
@@ -25,6 +26,7 @@ export class SharePageComponent {
 	private readonly _activatedRoute = inject(ActivatedRoute);
 	private readonly _userService = inject(UserService);
 	private readonly _eventService = inject(EventService);
+	private readonly _conferenceService = inject(ConferenceService);
 	private readonly _isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 	readonly translateService = inject(TranslateService);
 
@@ -44,6 +46,16 @@ export class SharePageComponent {
 		},
 	);
 
+	/** `:conferenceId` is declared on the parent route (`/conferences/:conferenceId/share`), not this one. */
+	readonly conferenceId = toSignal(
+		(this._activatedRoute.parent?.paramMap ?? this._activatedRoute.paramMap).pipe(
+			map((params) => params.get('conferenceId')),
+		),
+		{ initialValue: null },
+	);
+
+	readonly conference = computed(() => this._conferenceService.byId(this.conferenceId() ?? ''));
+
 	/** The organizer's own event that's currently running — the one a scanned QR should drop attendees into. */
 	readonly liveEvent = computed(() => {
 		const ownerId = this._userService.user()?._id;
@@ -58,6 +70,10 @@ export class SharePageComponent {
 			return `${this._origin}/profile`;
 		}
 
+		if (this.kind() === 'conference') {
+			return `${this._origin}/conf?id=${this.conferenceId() ?? ''}`;
+		}
+
 		const liveEvent = this.liveEvent();
 		if (liveEvent) {
 			return `${this._origin}/event/${liveEvent.slug}`;
@@ -66,17 +82,33 @@ export class SharePageComponent {
 		return `${this._origin}/sign`;
 	});
 
-	readonly title = computed(() =>
-		this.kind() === 'profile'
-			? this.translateService.translate('Поділитися профілем')()
-			: this.translateService.translate('Поділитися Conference')(),
-	);
+	readonly title = computed(() => {
+		if (this.kind() === 'profile') {
+			return this.translateService.translate('Поділитися профілем')();
+		}
+
+		if (this.kind() === 'conference') {
+			return this.translateService.translate('Поділитися конференцією')();
+		}
+
+		return this.translateService.translate('Поділитися Conference')();
+	});
 
 	readonly description = computed(() => {
 		if (this.kind() === 'profile') {
 			return this.translateService.translate(
 				'Дайте людям відсканувати цей код, щоб відкрити мій профіль Conference.',
 			)();
+		}
+
+		if (this.kind() === 'conference') {
+			const title = this.conference()?.title;
+			return title
+				? this.translateService.interpolate(
+						this.translateService.translate('Відскануйте код, щоб переглянути програму конференції «{{title}}».')(),
+						{ title },
+					)
+				: this.translateService.translate('Відскануйте код, щоб переглянути програму конференції.')();
 		}
 
 		return this.liveEvent()

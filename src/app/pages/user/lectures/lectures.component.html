@@ -1,7 +1,8 @@
 <div class="lectures-page mx-auto flex w-full max-w-[720px] flex-col gap-3 p-3 sm:gap-4 sm:p-4">
-	<div class="flex items-center justify-between gap-3">
-		<h1 class="m-0 text-lg font-semibold sm:text-xl" translate>Лекції</h1>
-	</div>
+	<button pButton type="button" [text]="true" class="self-start" routerLink="/conferences">
+		<i class="pi pi-arrow-left"></i>
+		<span translate>Назад до конференцій</span>
+	</button>
 
 	@if (!lectures().length) {
 		<p-card>
@@ -10,7 +11,7 @@
 	}
 
 	@for (lecture of lectures(); track lecture._id; let i = $index) {
-		<p-card [routerLink]="['/lectures', lecture._id]" class="cursor-pointer">
+		<p-card [routerLink]="[lecture._id]" class="cursor-pointer">
 			<div class="flex items-center justify-between gap-3 text-[var(--c-text-primary)]">
 				<div class="min-w-0 flex-1">
 					<span class="font-semibold">

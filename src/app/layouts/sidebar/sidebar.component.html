@@ -42,10 +42,6 @@
 		</a>
 	</div>
 
-	@if (showNames()) {
-	<div class="mt-2 px-2 text-xs font-semibold tracking-wide uppercase opacity-60" translate>Спільне</div>
-	}
-
 	<app-nav-icon
 		[class.sidebar--minimized-icon]="!showNames()"
 		[name]="showNames() ? translateService.translate('Share profile')() : ''"
@@ -62,21 +58,6 @@
 		(click)="closeIfOverlay()"
 		routerLink="/settings"
 		icon="cog"
-	/>
-
-	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
-
-	@if (showNames()) {
-	<div class="px-2 text-xs font-semibold tracking-wide uppercase opacity-60" translate>Для учасників</div>
-	}
-
-	<app-nav-icon
-		[class.sidebar--minimized-icon]="!showNames()"
-		[name]="showNames() ? translateService.translate('Лекції')() : ''"
-		[ariaLabel]="translateService.translate('Лекції')()"
-		(click)="closeIfOverlay()"
-		routerLink="/lectures"
-		icon="microphone"
 	/>
 
 	<app-nav-icon
@@ -97,21 +78,21 @@
 		icon="user-plus"
 	/>
 
+	<app-nav-icon
+		[class.sidebar--minimized-icon]="!showNames()"
+		[name]="showNames() ? translateService.translate('For hosts')() : ''"
+		[ariaLabel]="translateService.translate('For hosts')()"
+		(click)="closeIfOverlay()"
+		routerLink="/for-hosts"
+		icon="megaphone"
+	/>
+
 	@if (isOrganizer()) {
 	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
 
 	@if (showNames()) {
 	<div class="px-2 text-xs font-semibold tracking-wide uppercase opacity-60" translate>Для організаторів</div>
 	}
-
-	<app-nav-icon
-		[class.sidebar--minimized-icon]="!showNames()"
-		[name]="showNames() ? translateService.translate('Мої події')() : ''"
-		[ariaLabel]="translateService.translate('Мої події')()"
-		(click)="closeIfOverlay()"
-		routerLink="/events"
-		icon="calendar"
-	/>
 
 	<app-nav-icon
 		[class.sidebar--minimized-icon]="!showNames()"
@@ -124,6 +105,15 @@
 
 	<app-nav-icon
 		[class.sidebar--minimized-icon]="!showNames()"
+		[name]="showNames() ? translateService.translate('Мої події')() : ''"
+		[ariaLabel]="translateService.translate('Мої події')()"
+		(click)="closeIfOverlay()"
+		routerLink="/events"
+		icon="calendar"
+	/>
+
+	<app-nav-icon
+		[class.sidebar--minimized-icon]="!showNames()"
 		[name]="showNames() ? translateService.translate('Share Conference')() : ''"
 		[ariaLabel]="translateService.translate('Share Conference')()"
 		(click)="closeIfOverlay()"
@@ -131,13 +121,37 @@
 		icon="qrcode"
 	/>
 
+	<hr class="my-2 border-0 border-t-2 border-t-[var(--c-text-primary)]" />
+
+	@if (showNames()) {
+	<div class="px-2 text-xs font-semibold tracking-wide uppercase opacity-60" translate>Адміністрування</div>
+	}
+
 	<app-nav-icon
 		[class.sidebar--minimized-icon]="!showNames()"
-		[name]="showNames() ? translateService.translate('For hosts')() : ''"
-		[ariaLabel]="translateService.translate('For hosts')()"
+		[name]="showNames() ? translateService.translate('Користувачі')() : ''"
+		[ariaLabel]="translateService.translate('Користувачі')()"
 		(click)="closeIfOverlay()"
-		routerLink="/for-hosts"
-		icon="megaphone"
+		routerLink="/users"
+		icon="users"
+	/>
+
+	<app-nav-icon
+		[class.sidebar--minimized-icon]="!showNames()"
+		[name]="showNames() ? translateService.translate('Форми')() : ''"
+		[ariaLabel]="translateService.translate('Форми')()"
+		(click)="closeIfOverlay()"
+		routerLink="/forms"
+		icon="file-edit"
+	/>
+
+	<app-nav-icon
+		[class.sidebar--minimized-icon]="!showNames()"
+		[name]="showNames() ? translateService.translate('Переклади')() : ''"
+		[ariaLabel]="translateService.translate('Переклади')()"
+		(click)="closeIfOverlay()"
+		routerLink="/translations"
+		icon="language"
 	/>
 	}
 

@@ -125,7 +125,7 @@ export class EventManageComponent implements OnInit {
 
 		queueMicrotask(() => {
 			if (eventDoc && !this.isOwner()) {
-				this._router.navigateByUrl('/dashboard');
+				this._router.navigateByUrl('/profile');
 			}
 		});
 	}
